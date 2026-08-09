@@ -34,6 +34,10 @@ export const GameControl: React.FC<GameControlProps> = ({
         return 'けん';
       case 'COUNTDOWN_PON':
         return 'ぽん！';
+      case 'COUNTDOWN_AIKO':
+        return 'あいこで…';
+      case 'COUNTDOWN_SHO':
+        return 'しょ！';
       case 'JUDGEMENT':
         return '判定中...';
       default:
@@ -54,7 +58,7 @@ export const GameControl: React.FC<GameControlProps> = ({
         </div>
       )}
 
-      <div className="control-actions">
+      <div className="control-actions" style={{ flexDirection: 'column', gap: '0.5rem' }}>
         {!isCameraActive ? (
           <button
             className="btn-primary btn-camera"
@@ -64,14 +68,42 @@ export const GameControl: React.FC<GameControlProps> = ({
             <span>カメラを起動する</span>
           </button>
         ) : (
-          <button
-            className="btn-primary btn-play"
-            onClick={onStartGame}
-            disabled={isPlaying || !isDetectorReady}
-          >
-            <Play size={24} />
-            <span>{isPlaying ? 'じゃんけん中...' : 'じゃんけんスタート！'}</span>
-          </button>
+          <>
+            <button
+              className="btn-primary btn-play"
+              onClick={onStartGame}
+              disabled={isPlaying || !isDetectorReady}
+            >
+              <Play size={24} />
+              <span>{isPlaying ? 'じゃんけん中...' : 'じゃんけんスタート！'}</span>
+            </button>
+            <div
+              className="keyboard-shortcut-badge"
+              style={{
+                fontSize: '0.85rem',
+                color: 'rgba(255, 255, 255, 0.75)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                justifyContent: 'center',
+                marginTop: '0.2rem',
+              }}
+            >
+              <kbd
+                style={{
+                  background: 'rgba(255, 255, 255, 0.15)',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  borderRadius: '4px',
+                  padding: '2px 6px',
+                  fontFamily: 'monospace',
+                  fontWeight: 'bold',
+                }}
+              >
+                Space
+              </kbd>
+              <span>キーでスタート / リトライ</span>
+            </div>
+          </>
         )}
       </div>
     </div>

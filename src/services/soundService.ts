@@ -105,6 +105,22 @@ class SoundService {
   }
 
   /**
+   * 「あいこで…」の発声およびカウントダウン音 (523.25Hz: C5) の再生
+   */
+  public speakAiko(): void {
+    this.playBeep(523.25, 0.2, 'sine');
+    this.speakText('あいこで', 1.1, 1.3);
+  }
+
+  /**
+   * 「しょ！」の発声およびカウントダウン決定音 (880Hz: A5) の再生
+   */
+  public speakSho(): void {
+    this.playBeep(880, 0.3, 'triangle');
+    this.speakText('しょ！', 1.25, 1.4);
+  }
+
+  /**
    * 勝利ファンファーレ効果音の再生 (C5-E5-G5-C6 アルペジオ)
    */
   public playWinSound(): void {

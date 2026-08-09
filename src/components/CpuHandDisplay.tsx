@@ -3,29 +3,38 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { GameStage, HandGesture } from '../types/janken';
-import { Bot } from 'lucide-react';
+import { GameResult, GameStage, HandGesture } from '../types/janken';
+import { Sparkles } from 'lucide-react';
+import { MikuAvatar3D } from './MikuAvatar3D';
 
 interface CpuHandDisplayProps {
   stage: GameStage;
   cpuHand: HandGesture;
+  result: GameResult | null;
 }
 
 const HAND_MAP: Record<HandGesture, { icon: string; name: string }> = {
   ROCK: { icon: '✊', name: 'グー' },
   SCISSORS: { icon: '✌️', name: 'チョキ' },
   PAPER: { icon: '🖐️', name: 'パー' },
-  UNKNOWN: { icon: '❓', name: '思考中' },
+  UNKNOWN: { icon: '❓', name: '待機中' },
 };
 
-export const CpuHandDisplay: React.FC<CpuHandDisplayProps> = ({ stage, cpuHand }) => {
+export const CpuHandDisplay: React.FC<CpuHandDisplayProps> = ({ stage, cpuHand, result }) => {
   const [shuffleHand, setShuffleHand] = useState<HandGesture>('ROCK');
 
-  // カウントダウン中 (JAN, KEN, PON) は 100ms 間隔で手をシャッフルさせる
+  // カウントダウン中 (JAN, KEN, PON, AIKO, SHO) は 100ms 間隔で表示バッジの手をシャッフルさせる
   useEffect(() => {
     let intervalId: number | null = null;
 
-    if (stage === 'COUNTDOWN_JAN' || stage === 'COUNTDOWN_KEN' || stage === 'COUNTDOWN_PON') {
+    const isCountdown =
+      stage === 'COUNTDOWN_JAN' ||
+      stage === 'COUNTDOWN_KEN' ||
+      stage === 'COUNTDOWN_PON' ||
+      stage === 'COUNTDOWN_AIKO' ||
+      stage === 'COUNTDOWN_SHO';
+
+    if (isCountdown) {
       const hands: HandGesture[] = ['ROCK', 'SCISSORS', 'PAPER'];
       let idx = 0;
       intervalId = window.setInterval(() => {
@@ -41,22 +50,27 @@ export const CpuHandDisplay: React.FC<CpuHandDisplayProps> = ({ stage, cpuHand }
     };
   }, [stage]);
 
-  const displayHand =
-    stage === 'COUNTDOWN_JAN' || stage === 'COUNTDOWN_KEN' || stage === 'COUNTDOWN_PON'
-      ? shuffleHand
-      : stage === 'IDLE'
-      ? 'UNKNOWN'
-      : cpuHand;
+  const isCountdown =
+    stage === 'COUNTDOWN_JAN' ||
+    stage === 'COUNTDOWN_KEN' ||
+    stage === 'COUNTDOWN_PON' ||
+    stage === 'COUNTDOWN_AIKO' ||
+    stage === 'COUNTDOWN_SHO';
 
+  const displayHand = isCountdown ? shuffleHand : stage === 'IDLE' ? 'UNKNOWN' : cpuHand;
   const currentInfo = HAND_MAP[displayHand];
 
   return (
     <div className="cpu-hand-card">
       <div className="cpu-header">
-        <Bot size={22} className="cpu-icon" />
-        <span className="cpu-title">AI (CPU)</span>
+        <Sparkles size={22} className="cpu-icon" style={{ color: '#39c5bb' }} />
+        <span className="cpu-title">3D Miku AI (CPU)</span>
       </div>
 
+      {/* 初音ミク風 3D アバター描画領域 */}
+      <MikuAvatar3D stage={stage} cpuHand={cpuHand} result={result} />
+
+      {/* 手のバッジ表示 */}
       <div className={`cpu-display-area ${stage === 'RESULT' ? 'revealed' : ''}`}>
         <span className="cpu-hand-emoji">{currentInfo.icon}</span>
         <span className="cpu-hand-name">{currentInfo.name}</span>

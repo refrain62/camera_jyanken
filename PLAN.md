@@ -1,58 +1,71 @@
 # リアルタイムWebカメラじゃんけんシステム 開発計画書 (PLAN.md)
 
 ## 1. プロジェクト概要
-Webカメラから取得したリアルタイム映像からユーザーの手の形状（21個の3次元ハンドランドマーク）を解析し、「じゃん・けん・ぽん！」の音声を交えたカウントダウンアニメーションと同期して自動対戦を行うWebアプリケーションの開発プロジェクトである。
+Webカメラから取得したリアルタイム映像からユーザーの手の形状（21個の3次元ハンドランドマーク）を解析し、「じゃん・けん・ぽん！」およびあいこ時の「あいこで…しょ！」の音声を交えたカウントダウンアニメーション、Three.js WebGL による初音ミク風3Dアバターと同期して自動対戦を行うWebアプリケーションの開発プロジェクトである。
 
 ## 2. 厳格な動作定義と判定基準（曖昧表現の完全排除）
 当プロジェクトでは「正しく」「適切に」「上手く」等の曖昧な表現を全排除し、以下の客観的数値および状態遷移にて期待値を規定する。
 
 ### 2.1 じゃんけんの手識別仕様
-- **グー (Rock)**: 5本の指すべて（親指、人差し指、中指、薬指、小指）の第一関節・第二関節の折れ曲がり角度が 90度以下 かつ、指先と掌基部（Wrist: Landmark index 0）の距離が 手のサイズ比率 0.45未満 である状態。
-- **チョキ (Scissors)**: 人差し指（Index finger: Landmark 5-8）および 中指（Middle finger: Landmark 9-12）の伸び率が 0.75以上、かつ 薬指（Ring finger: Landmark 13-16）・小指（Pinky: Landmark 17-20）の伸び率が 0.35未満 である状態。
-- **パー (Paper)**: 5本すべての指の伸び率が 0.75以上 である状態。
+- **グー (Rock)**: 4本指（人差し指、中指、薬指、小指）の伸長度 $R_f < 1.10$ （指先と手首の距離が MCP関節と手首の距離の 1.10倍未満）である状態。
+- **チョキ (Scissors)**: 人差し指および中指の伸長度 $R_f \ge 1.35$ かつ、薬指および小指の伸長度 $R_f < 1.10$ である状態。
+- **パー (Paper)**: 4本すべての指の伸長度 $R_f \ge 1.35$ である状態。
 - **未検出 / 不確定 (Unknown)**: 上記いずれの幾何条件にも適合しない状態、または検出信頼度 score < 0.60 の状態。
 
 ### 2.2 ゲームステートマシンと時間軸仕様
 ```
 [IDLE] ---> [COUNTDOWN_JAN] ---> [COUNTDOWN_KEN] ---> [COUNTDOWN_PON] ---> [JUDGEMENT] ---> [RESULT]
  (待機)        (0.0s - 0.8s)       (0.8s - 1.6s)       (1.6s - 2.2s)       (2.2s - 2.5s)     (2.5s - 5.5s)
+                                                                                                  | (DRAW発生時 1.2s後)
+                                                                                                  v
+                                     [JUDGEMENT] <--- [COUNTDOWN_SHO] <--- [COUNTDOWN_AIKO] <-----+
+                                    (1.4s - 1.7s)      (0.8s - 1.4s)        (0.0s - 0.8s)
 ```
 - **IDLE**: ゲーム開始ボタン押下前。Webカメラ映像のライブプレビューおよびランドマーク描画のみ動作する状態。
 - **COUNTDOWN_JAN (t = 0.0s)**: Web Speech API により テキスト「じゃん」の音声再生要求を発効し、画面表示を「じゃん」に変更する状態。
 - **COUNTDOWN_KEN (t = 0.8s)**: 音声再生要求「けん」を発効し、画面表示を「けん」に変更する状態。
 - **COUNTDOWN_PON (t = 1.6s)**: 音声再生要求「ぽん！」を発効し、画面表示を「ぽん！」に変更する状態。
-- **JUDGEMENT (t = 2.2s)**: t = 2.2s 時点における最新フレームの Hand Landmarker 検出結果から判定された手（グー/チョキ/パー）を取得し、CPUの手（乱数生成結果）と照合して勝敗を決定する状態。
-- **RESULT (t = 2.5s - 5.5s)**: 判定結果（勝利 / 敗北 / 引き分け）および CPUの手を画面描画し、3.0秒経過後に自動的に IDLE 状態へ遷移する状態。
+- **COUNTDOWN_AIKO (t = 0.0s)**: 引き分け（`DRAW`）時に発火。音声「あいこで」を発声し、画面表示を「あいこで…」に変更する状態。
+- **COUNTDOWN_SHO (t = 0.8s)**: あいこカウントダウン第2ステージ。音声「しょ！」を発声し、画面表示を「しょ！」に変更する状態。
+- **JUDGEMENT**: 最新フレームの Hand Landmarker 検出結果から判定された手（グー/チョキ/パー）を取得し、CPUの手（乱数生成結果）と照合して勝敗を決定する状態。
+- **RESULT**: 判定結果（勝利 / 敗北 / 引き分け）および CPUの手を画面描画する状態。勝敗確定時は 3.0秒経過後に IDLE 状態へ遷移し、引き分け時は 1.2秒後に自動的に `COUNTDOWN_AIKO` へ自動遷移する。
+
+### 2.3 初音ミク風 3D アバター (Three.js WebGL) 描画仕様
+- **カラーパレット**: 髪・ツインテール・ネクタイ (`#39c5bb`: エメラルドグリーン), 衣装 (`#1f242d`: ダークブラック, `#f0f4f8`: ホワイト), 肌色 (`#ffdfc4`)。
+- **3Dフィンガーポーズ**: `cpuHand === 'ROCK'`（指折れ曲がり角 135度）, `SCISSORS`（人差し指・中指回転角 0度, 薬指・小指回転角 135度）, `PAPER`（全指回転角 0度）。
+- **表情・頭部姿勢ポーズ**:
+  - `result === 'WIN'` (プレイヤー勝利/ミク敗北): 頭部 X軸回転 +0.25 rad（うつむき姿勢）、目 Y軸スケール 0.2（目を細める悔しがり表情）。
+  - `result === 'LOSE'` (プレイヤー敗北/ミク勝利): 頭部 Z軸振動 ±0.08 rad（首フリダンス）、目 Y軸スケール 0.8、口回転 $\pi$ rad（大喜び笑顔）。
+  - `result === 'DRAW'` (引き分け): 頭部 Z軸回転 +0.25 rad（首かしげ）、目 スケール 1.2倍（驚き顔）。
+
+### 2.4 キーボード操作仕様 (`Space` キー)
+- **ショートカット**: `event.code === 'Space'` 検出時、ブラウザのスクロール動作を `event.preventDefault()` で停止し、`stage === 'IDLE'` または `stage === 'RESULT'` の場合に即座に `handleStartGame()` を呼び出す。
 
 ## 3. 実装フェーズおよび進行タスク
 1. **Phase 1: プロジェクト基本構造の構築**
-   - React + TypeScript + Vite プロジェクトの作成および依存ライブラリ (`@mediapipe/tasks-vision`, `lucide-react`, `canvas-confetti`) のセットアップ。
+   - React + TypeScript + Vite プロジェクトの作成および依存ライブラリ (`@mediapipe/tasks-vision`, `lucide-react`, `canvas-confetti`, `three`, `@types/three`) のセットアップ。
    - ESLint / TypeScript の厳格設定とクリーンビルド確認。
 
 2. **Phase 2: Hand Detector エンジンの実装**
    - MediaPipe Tasks Vision `GestureRecognizer` / `HandLandmarker` モジュールの初期化クラス実装。
-   - Webカメラ映像 (1280x720, 30fps) からの `HTMLVideoElement` 解析ループおよび 21ランドマーク座標のベクトル計算クラス実装。
    - ランドマーク座標からのグー・チョキ・パー判定純粋関数の実装と単体テスト。
 
-3. **Phase 3: じゃんけんゲームエンジン & 音声合成**
-   - `useJankenEngine` カスタムフックの実装 (State Machine / Timer / 勝敗判定)。
-   - Web Speech API および AudioContext (`state === 'running'`) を用いた「じゃん」「けん」「ぽん！」の超高精度音声再生モジュール。
+3. **Phase 3: じゃんけんゲームエンジン & 音声合成 & あいこ連続遷移**
+   - `useJankenGame` カスタムフックの実装 (State Machine / Timer / 勝敗判定)。
+   - Web Speech API および AudioContext (`state === 'running'`) を用いた「じゃん」「けん」「ぽん！」「あいこで…」「しょ！」の音声再生モジュール。
 
-4. **Phase 4: リッチUI / Glassmorphism コンポーネント実装**
-   - モダンサイバーグラスモーフィズムデザイン（ダークモード、ネオンパープル/アクアブルーグラデーション）。
-   - Webカメラ Canvas オーバーレイ描画（ネオン骨格関節、指先エフェクト、判定ラベル）。
-   - CPU手カード表示、勝敗判定オーバーレイ、対戦ログ・スコアボード。
+4. **Phase 4: 初音ミク風 3D アバター (Three.js WebGL) の構築**
+   - Three.js WebGL レンダラーを使用した `MikuAvatar3D` コンポーネントの実装。
+   - リアルタイムアニメーション（呼吸・浮遊・ツインテール風なびき・手ポーズ・表情変更）。
 
-5. **Phase 5: ドキュメント分離および最終検証**
-   - `README.md` を簡潔な概要・クイックスタート形式に構成。
-   - 詳細な認識数式、時間軸、ステートマシン仕様を [`docs/SPECIFICATION.md`](file:///C:/develop/github/camera_jyanken/docs/SPECIFICATION.md) へドキュメント化。
-   - プロジェクト用 `.gitignore`（`node_modules/`, `dist/`, `.env.local` 等の除外定義）の作成。
-   - `npm run lint` 実行による完全な型安全性と無警告状態の確保。
+5. **Phase 5: UX強化 & キーボードアクセシビリティ (`Space` キー)**
+   - `window.addEventListener('keydown')` による `Space` キー操作での即時スタート・リトライ処理の実装。
+   - `GameControl` 内への `[Space]` ガイドバッジ表示。
+
+6. **Phase 6: ドキュメント更新および最終検証**
+   - `PLAN.md` および `ARCHITECTURE.md` のセット更新。
+   - `npm run lint` 実行による完全な型安全性と無警告状態（エラー 0件、警告 0件）の確保。
 
 ## 4. 品質保証仕様およびテスト実績
-- `npm run lint` コマンドでエラー 0件、警告 0件 を確認済み。
-- `npx tsc --noEmit` コマンドで型エラー 0件 を確認済み。
-- `npm run test` コマンドを実行し、全6項目単体テストが 100% PASS することを確認済み。
-- `README.md`（概要・クイックスタート）と [`docs/SPECIFICATION.md`](file:///C:/develop/github/camera_jyanken/docs/SPECIFICATION.md)（詳細仕様書）のドキュメント分離完了。
-
-
+- `npm run lint` コマンドでエラー 0件、警告 0件 を確認。
+- `npm run test` コマンドを実行し、全単体テストが 100% PASS することを確認。

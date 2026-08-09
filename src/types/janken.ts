@@ -17,16 +17,37 @@ export type HandGesture = 'ROCK' | 'SCISSORS' | 'PAPER' | 'UNKNOWN';
  * - 'COUNTDOWN_JAN': 音声「じゃん」発声ステージ（経過時間: 0ms - 800ms）
  * - 'COUNTDOWN_KEN': 音声「けん」発声ステージ（経過時間: 800ms - 1600ms）
  * - 'COUNTDOWN_PON': 音声「ぽん！」発声ステージ（経過時間: 1600ms - 2200ms）
- * - 'JUDGEMENT': 判定確定ステージ（経過時間: 2200ms - 2500ms）
- * - 'RESULT': 勝敗結果表示ステージ（経過時間: 2500ms - 5500ms）
+ * - 'COUNTDOWN_AIKO': あいこ発生時の音声「あいこで…」発声ステージ（経過時間: 0ms - 800ms）
+ * - 'COUNTDOWN_SHO': あいこ発生時の音声「しょ！」発声ステージ（経過時間: 800ms - 1400ms）
+ * - 'JUDGEMENT': 判定確定ステージ（経過時間: 2200ms/1400ms - 判定完了）
+ * - 'RESULT': 勝敗結果表示ステージ（経過時間: 判定後300ms経過以降）
  */
 export type GameStage =
   | 'IDLE'
   | 'COUNTDOWN_JAN'
   | 'COUNTDOWN_KEN'
   | 'COUNTDOWN_PON'
+  | 'COUNTDOWN_AIKO'
+  | 'COUNTDOWN_SHO'
   | 'JUDGEMENT'
   | 'RESULT';
+
+/**
+ * 初音ミク風3Dアバターのアニメーション・表情状態定義
+ */
+export type MikuFacialExpression = 'NORMAL' | 'HAPPY' | 'DISAPPOINTED' | 'SURPRISED';
+
+/**
+ * 3Dアバターのアニメーションパラメータ
+ */
+export interface MikuAvatarState {
+  /** 現在表示すべき表情 */
+  expression: MikuFacialExpression;
+  /** 手の形状ポーズ ('ROCK' | 'SCISSORS' | 'PAPER' | 'UNKNOWN') */
+  handGesture: HandGesture;
+  /** 腕の振りモーションをアクティブにするかどうかのフラグ */
+  isShakingArm: boolean;
+}
 
 /**
  * 対戦結果を表す型

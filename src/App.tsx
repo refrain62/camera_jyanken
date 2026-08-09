@@ -45,9 +45,31 @@ export const App: React.FC = () => {
   }, []);
 
   // ゲームスタートボタンハンドラ
-  const handleStartGame = () => {
+  const handleStartGame = useCallback(() => {
     startGame(() => latestGestureRef.current);
-  };
+  }, [startGame]);
+
+  // キーボード (Spaceキー) によるゲームスタート・リトライハンドラ
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // フォーム入力中などでない場合に Space キーのスクロールを抑制してゲームを開始する
+      if (event.code === 'Space' && isCameraActive && isDetectorReady) {
+        const activeElem = document.activeElement;
+        const isInputActive =
+          activeElem && (activeElem.tagName === 'INPUT' || activeElem.tagName === 'TEXTAREA');
+
+        if (!isInputActive) {
+          event.preventDefault();
+          handleStartGame();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleStartGame, isCameraActive, isDetectorReady]);
 
   // カメラ起動処理
   const handleStartCamera = () => {
@@ -81,8 +103,8 @@ export const App: React.FC = () => {
               currentGesture={currentHandGesture}
             />
 
-            {/* AI CPUカード表示 */}
-            <CpuHandDisplay stage={stage} cpuHand={cpuHand} />
+            {/* AI CPUカード表示 (3Dミクアバター搭載) */}
+            <CpuHandDisplay stage={stage} cpuHand={cpuHand} result={result} />
           </div>
 
           {/* ゲームアクション＆カウントダウンオーバーレイ */}
