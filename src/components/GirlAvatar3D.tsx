@@ -1,29 +1,29 @@
 /**
- * 初音ミク風3Dアバター WebGL レンダリングコンポーネント (Three.js)
+ * 女の子の3Dアバター WebGL レンダリングコンポーネント (Three.js)
  */
 
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GameResult, GameStage, HandGesture } from '../types/janken';
 
-interface MikuAvatar3DProps {
+interface GirlAvatar3DProps {
   stage: GameStage;
   cpuHand: HandGesture;
   result: GameResult | null;
 }
 
 /**
- * 3Dミクアバターコンポーネント
+ * 3D女の子アバターコンポーネント
  */
-export const MikuAvatar3D: React.FC<MikuAvatar3DProps> = ({ stage, cpuHand, result }) => {
+export const GirlAvatar3D: React.FC<GirlAvatar3DProps> = ({ stage, cpuHand, result }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
 
   // 各パーツのリファレンスを保持
   const avatarGroupRef = useRef<THREE.Group | null>(null);
   const headGroupRef = useRef<THREE.Group | null>(null);
-  const leftTwinTailRef = useRef<THREE.Mesh | null>(null);
-  const rightTwinTailRef = useRef<THREE.Mesh | null>(null);
+  const leftSideHairRef = useRef<THREE.Mesh | null>(null);
+  const rightSideHairRef = useRef<THREE.Mesh | null>(null);
   const rightArmGroupRef = useRef<THREE.Group | null>(null);
   const leftArmGroupRef = useRef<THREE.Group | null>(null);
   const eyeLeftMeshRef = useRef<THREE.Mesh | null>(null);
@@ -78,7 +78,7 @@ export const MikuAvatar3D: React.FC<MikuAvatar3DProps> = ({ stage, cpuHand, resu
     dirLight.position.set(2, 4, 3);
     scene.add(dirLight);
 
-    const pointLight = new THREE.PointLight(0x39c5bb, 1.2, 5);
+    const pointLight = new THREE.PointLight(0xffd5c2, 1.2, 5);
     pointLight.position.set(-1.5, 2, 1);
     scene.add(pointLight);
 
@@ -87,9 +87,9 @@ export const MikuAvatar3D: React.FC<MikuAvatar3DProps> = ({ stage, cpuHand, resu
     avatarGroupRef.current = avatarGroup;
     scene.add(avatarGroup);
 
-    // マテリアルカラー定義 (初音ミクカラーパレット)
-    const mikuHairMat = new THREE.MeshStandardMaterial({
-      color: 0x39c5bb, // エメラルドグリーン
+    // マテリアルカラー定義 (初音女の子カラーパレット)
+    const hairMat = new THREE.MeshStandardMaterial({
+      color: 0x694332, // チェスナットブラウン
       roughness: 0.3,
       metalness: 0.1,
     });
@@ -98,19 +98,19 @@ export const MikuAvatar3D: React.FC<MikuAvatar3DProps> = ({ stage, cpuHand, resu
       roughness: 0.6,
     });
     const clothesBlackMat = new THREE.MeshStandardMaterial({
-      color: 0x1f242d, // ダークグレー/ブラック
+      color: 0x76516e, // モーブ
       roughness: 0.4,
     });
     const clothesWhiteMat = new THREE.MeshStandardMaterial({
-      color: 0xf0f4f8,
+      color: 0xffb8ca,
       roughness: 0.3,
     });
-    const tieMat = new THREE.MeshStandardMaterial({
-      color: 0x39c5bb,
+    const ribbonMat = new THREE.MeshStandardMaterial({
+      color: 0xfff0dc,
       roughness: 0.2,
       metalness: 0.3,
     });
-    const eyeMat = new THREE.MeshBasicMaterial({ color: 0x008080 }); // ディープティール
+    const eyeMat = new THREE.MeshBasicMaterial({ color: 0x51352a }); // ブラウン
     const mouthMat = new THREE.MeshBasicMaterial({ color: 0xe65c00 });
 
     // --- 胴体 (Body & Shirt) ---
@@ -119,13 +119,15 @@ export const MikuAvatar3D: React.FC<MikuAvatar3DProps> = ({ stage, cpuHand, resu
     torsoMesh.position.set(0, 0.8, 0);
     avatarGroup.add(torsoMesh);
 
-    // 襟元・ネクタイ
-    const tieGeo = new THREE.BoxGeometry(0.06, 0.3, 0.02);
-    const tieMesh = new THREE.Mesh(tieGeo, tieMat);
-    tieMesh.position.set(0, 0.85, 0.19);
-    tieMesh.rotation.x = -0.1;
-    avatarGroup.add(tieMesh);
-
+    // 襟元のリボン
+    const ribbonGeo = new THREE.SphereGeometry(0.045, 16, 12);
+    for (const side of [-1, 1]) {
+      const ribbonMesh = new THREE.Mesh(ribbonGeo, ribbonMat);
+      ribbonMesh.scale.set(1.2, 0.65, 0.4);
+      ribbonMesh.position.set(side * 0.04, 1.0, 0.2);
+      ribbonMesh.rotation.z = side * 0.3;
+      avatarGroup.add(ribbonMesh);
+    }
     // スカート/腰回り
     const skirtGeo = new THREE.ConeGeometry(0.32, 0.25, 16);
     const skirtMesh = new THREE.Mesh(skirtGeo, clothesBlackMat);
@@ -145,7 +147,7 @@ export const MikuAvatar3D: React.FC<MikuAvatar3DProps> = ({ stage, cpuHand, resu
 
     // 前髪 (Hair Bangs)
     const bangsGeo = new THREE.SphereGeometry(0.27, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.45);
-    const bangsMesh = new THREE.Mesh(bangsGeo, mikuHairMat);
+    const bangsMesh = new THREE.Mesh(bangsGeo, hairMat);
     bangsMesh.rotation.x = 0.2;
     headGroup.add(bangsMesh);
 
@@ -170,30 +172,24 @@ export const MikuAvatar3D: React.FC<MikuAvatar3DProps> = ({ stage, cpuHand, resu
     headGroup.add(mouthMesh);
     mouthMeshRef.current = mouthMesh;
 
-    // ヘッドフォン (Headset)
-    const headsetGeo = new THREE.TorusGeometry(0.28, 0.02, 8, 32, Math.PI);
-    const headsetMesh = new THREE.Mesh(headsetGeo, clothesBlackMat);
-    headsetMesh.rotation.x = Math.PI / 2;
-    headGroup.add(headsetMesh);
+    // 後ろ髪を顔の背面に置き、目と口を隠さない。
+    const backHair = new THREE.Mesh(new THREE.SphereGeometry(0.28, 32, 24), hairMat);
+    backHair.scale.set(1.02, 1.12, 0.65);
+    backHair.position.set(0, -0.015, -0.12);
+    headGroup.add(backHair);
 
-    // --- ツインテール (Twin Tails) ---
-    const twinTailGeo = new THREE.ConeGeometry(0.12, 1.1, 16);
-    twinTailGeo.translate(0, -0.55, 0); // 回転軸を根元に設定
-
-    // 左ツインテール
-    const leftTwinTail = new THREE.Mesh(twinTailGeo, mikuHairMat);
-    leftTwinTail.position.set(-0.28, 0.15, -0.05);
-    leftTwinTail.rotation.z = 0.35;
-    headGroup.add(leftTwinTail);
-    leftTwinTailRef.current = leftTwinTail;
-
-    // 右ツインテール
-    const rightTwinTail = new THREE.Mesh(twinTailGeo, mikuHairMat);
-    rightTwinTail.position.set(0.28, 0.15, -0.05);
-    rightTwinTail.rotation.z = -0.35;
-    headGroup.add(rightTwinTail);
-    rightTwinTailRef.current = rightTwinTail;
-
+    // 両側の短い髪でボブヘアの輪郭を作る。
+    const sideHairGeo = new THREE.SphereGeometry(1, 20, 16);
+    sideHairGeo.scale(0.075, 0.22, 0.12);
+    sideHairGeo.translate(0, -0.12, 0);
+    const leftSideHair = new THREE.Mesh(sideHairGeo, hairMat);
+    leftSideHair.position.set(-0.235, 0.04, 0);
+    headGroup.add(leftSideHair);
+    leftSideHairRef.current = leftSideHair;
+    const rightSideHair = new THREE.Mesh(sideHairGeo, hairMat);
+    rightSideHair.position.set(0.235, 0.04, 0);
+    headGroup.add(rightSideHair);
+    rightSideHairRef.current = rightSideHair;
     // --- 左腕 (Left Arm - 待機用) ---
     const leftArmGroup = new THREE.Group();
     leftArmGroup.position.set(-0.28, 1.0, 0);
@@ -202,7 +198,7 @@ export const MikuAvatar3D: React.FC<MikuAvatar3DProps> = ({ stage, cpuHand, resu
 
     const leftArmGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.45, 16);
     leftArmGeo.translate(0, -0.22, 0);
-    const leftArmMesh = new THREE.Mesh(leftArmGeo, clothesBlackMat);
+    const leftArmMesh = new THREE.Mesh(leftArmGeo, skinMat);
     leftArmMesh.rotation.z = 0.2;
     leftArmGroup.add(leftArmMesh);
 
@@ -260,12 +256,12 @@ export const MikuAvatar3D: React.FC<MikuAvatar3DProps> = ({ stage, cpuHand, resu
         avatarGroupRef.current.position.y = Math.sin(elapsedTime * 2) * 0.03;
       }
 
-      // ツインテールのなびき
-      if (leftTwinTailRef.current && rightTwinTailRef.current) {
-        leftTwinTailRef.current.rotation.z = 0.35 + Math.sin(elapsedTime * 3) * 0.06;
-        rightTwinTailRef.current.rotation.z = -0.35 - Math.sin(elapsedTime * 3) * 0.06;
-        leftTwinTailRef.current.rotation.x = Math.cos(elapsedTime * 2.5) * 0.05;
-        rightTwinTailRef.current.rotation.x = Math.cos(elapsedTime * 2.5) * 0.05;
+      // サイドヘアのなびき
+      if (leftSideHairRef.current && rightSideHairRef.current) {
+        leftSideHairRef.current.rotation.z = 0.03 + Math.sin(elapsedTime * 3) * 0.025;
+        rightSideHairRef.current.rotation.z = -0.03 - Math.sin(elapsedTime * 3) * 0.025;
+        leftSideHairRef.current.rotation.x = Math.cos(elapsedTime * 2.5) * 0.05;
+        rightSideHairRef.current.rotation.x = Math.cos(elapsedTime * 2.5) * 0.05;
       }
 
       // (B) ステージに応じたモーション制御
@@ -328,14 +324,14 @@ export const MikuAvatar3D: React.FC<MikuAvatar3DProps> = ({ stage, cpuHand, resu
       if (headGroupRef.current && eyeLeftMeshRef.current && eyeRightMeshRef.current && mouthMeshRef.current) {
         if (curStage === 'RESULT') {
           if (curResult === 'WIN') {
-            // プレイヤー勝利 ＝ ミク敗北（悔しい・ショックポーズ）
+            // プレイヤー勝利 ＝ 女の子敗北（悔しい・ショックポーズ）
             headGroupRef.current.rotation.x = 0.25;
             headGroupRef.current.rotation.z = -0.1;
             eyeLeftMeshRef.current.scale.set(1, 0.2, 1);
             eyeRightMeshRef.current.scale.set(1, 0.2, 1);
             mouthMeshRef.current.rotation.z = 0;
           } else if (curResult === 'LOSE') {
-            // プレイヤー敗北 ＝ ミク勝利（大喜び笑顔ポーズ）
+            // プレイヤー敗北 ＝ 女の子勝利（大喜び笑顔ポーズ）
             headGroupRef.current.rotation.x = -0.15;
             headGroupRef.current.rotation.z = Math.sin(elapsedTime * 6) * 0.08;
             eyeLeftMeshRef.current.scale.set(1, 0.8, 1);
@@ -394,7 +390,7 @@ export const MikuAvatar3D: React.FC<MikuAvatar3DProps> = ({ stage, cpuHand, resu
   return (
     <div
       ref={containerRef}
-      className="miku-3d-avatar-container"
+      className="girl-3d-avatar-container"
       style={{
         width: '100%',
         height: '240px',

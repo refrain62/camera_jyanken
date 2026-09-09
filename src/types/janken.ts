@@ -33,16 +33,16 @@ export type GameStage =
   | 'RESULT';
 
 /**
- * 初音ミク風3Dアバターのアニメーション・表情状態定義
+ * 女の子の3Dアバターのアニメーション・表情状態定義
  */
-export type MikuFacialExpression = 'NORMAL' | 'HAPPY' | 'DISAPPOINTED' | 'SURPRISED';
+export type GirlFacialExpression = 'NORMAL' | 'HAPPY' | 'DISAPPOINTED' | 'SURPRISED';
 
 /**
  * 3Dアバターのアニメーションパラメータ
  */
-export interface MikuAvatarState {
+export interface GirlAvatarState {
   /** 現在表示すべき表情 */
-  expression: MikuFacialExpression;
+  expression: GirlFacialExpression;
   /** 手の形状ポーズ ('ROCK' | 'SCISSORS' | 'PAPER' | 'UNKNOWN') */
   handGesture: HandGesture;
   /** 腕の振りモーションをアクティブにするかどうかのフラグ */
