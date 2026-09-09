@@ -20,29 +20,34 @@ Webカメラのリアルタイム映像からAI（MediaPipe HandLandmarker）が
 
 ### 依存パッケージのインストール
 ```bash
-npm install
+pnpm install
 ```
 
 ### 開発サーバーの起動
 ```bash
-npm run dev
+pnpm dev
 ```
 ブラウザで [http://localhost:3000](http://localhost:3000) にアクセスします。
 
 ### 単体テストの実行
 ```bash
-npm run test
+pnpm test
 ```
 
 ### リンター品質検証
 ```bash
-npm run lint
+pnpm lint
 ```
 
 ### プロダクションビルド
 ```bash
-npm run build
+pnpm build
 ```
+
+## GitHub Pages
+
+`develop` ブランチへのpush、またはActions画面からの手動実行でビルドと公開を行います。
+リポジトリの Settings > Pages > Build and deployment > Source は `GitHub Actions` を選択してください。
 
 ---
 
