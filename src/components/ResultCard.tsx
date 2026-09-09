@@ -1,5 +1,5 @@
 /**
- * 勝敗判定結果ポップオーバー表示コンポーネント
+ * 勝敗判定結果をカメラ側に表示するコンポーネント
  */
 
 import React from 'react';
@@ -57,28 +57,26 @@ export const ResultCard: React.FC<ResultCardProps> = ({
   const content = getResultContent();
 
   return (
-    <div className="result-card-overlay">
-      <div className={`result-card ${content.cardClass}`}>
-        <div className="result-header">
-          {content.icon}
-          <h2 className="result-title">{content.title}</h2>
-          <p className="result-subtitle">{content.subtitle}</p>
+    <section className={`result-card ${content.cardClass}`} aria-live="polite">
+      <div className="result-header">
+        {content.icon}
+        <h2 className="result-title">{content.title}</h2>
+        <p className="result-subtitle">{content.subtitle}</p>
+      </div>
+
+      <div className="result-details">
+        <div className="detail-item">
+          <span className="detail-label">あなたの手</span>
+          <span className="detail-value">{GESTURE_NAME[playerHand]}</span>
         </div>
 
-        <div className="result-details">
-          <div className="detail-item">
-            <span className="detail-label">あなたの手</span>
-            <span className="detail-value">{GESTURE_NAME[playerHand]}</span>
-          </div>
+        <div className="detail-vs">VS</div>
 
-          <div className="detail-vs">VS</div>
-
-          <div className="detail-item">
-            <span className="detail-label">AIの手</span>
-            <span className="detail-value">{GESTURE_NAME[cpuHand]}</span>
-          </div>
+        <div className="detail-item">
+          <span className="detail-label">AIの手</span>
+          <span className="detail-value">{GESTURE_NAME[cpuHand]}</span>
         </div>
       </div>
-    </div>
+    </section>
   );
 };

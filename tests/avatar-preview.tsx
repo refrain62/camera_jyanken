@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { CpuHandDisplay } from '../src/components/CpuHandDisplay';
+import { ResultCard } from '../src/components/ResultCard';
 import { GameStage, HandGesture, GameResult } from '../src/types/janken';
 import '../src/styles/globals.css';
 
@@ -17,7 +18,13 @@ export function Preview() {
       <label>結果<select value={result} onChange={(event) => setResult(event.target.value as GameResult)}>{['WIN', 'LOSE', 'DRAW'].map((value) => <option key={value}>{value}</option>)}</select></label>
       <label>カード幅<select value={width} onChange={(event) => setWidth(Number(event.target.value))}>{[240, 280, 400].map((value) => <option key={value}>{value}</option>)}</select></label>
     </div>
-    <div style={{ width }}><CpuHandDisplay stage={stage} cpuHand={hand} result={result} /></div>
+    <div style={{ display: 'grid', gridTemplateColumns: 'minmax(480px, 1fr) 280px', gap: 16, maxWidth: 900 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div className="webcam-canvas-container" />
+        <ResultCard result={result} playerHand="PAPER" cpuHand={hand} visible={stage === 'RESULT'} />
+      </div>
+      <div style={{ width }}><CpuHandDisplay stage={stage} cpuHand={hand} result={result} /></div>
+    </div>
   </main>;
 }
 createRoot(document.getElementById('root')!).render(<React.StrictMode><Preview /></React.StrictMode>);

@@ -177,6 +177,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  position: relative;
 }
 
 .stage-card-wrapper {
@@ -184,6 +185,13 @@ body {
   grid-template-columns: 1fr 280px;
   gap: 1rem;
   position: relative;
+}
+
+.player-stage-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
 }
 
 @media (max-width: 768px) {
@@ -351,24 +359,30 @@ body {
 
 /* Countdown Overlay Animation */
 .countdown-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(9, 13, 22, 0.75);
-  backdrop-filter: blur(8px);
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: min(18rem, calc(100% - 2rem));
+  padding: 0.5rem 1.5rem;
+  background: rgba(9, 13, 22, 0.82);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border-neon);
+  border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: 20;
   pointer-events: none;
+  box-shadow: 0 0 24px rgba(0, 243, 255, 0.2);
 }
 
 .countdown-text {
   font-family: var(--font-heading);
-  font-size: 7rem;
+  font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 900;
+  line-height: 1.1;
+  white-space: nowrap;
   text-transform: uppercase;
   background: linear-gradient(135deg, var(--primary-cyan), var(--primary-magenta));
   -webkit-background-clip: text;
@@ -383,34 +397,18 @@ body {
 }
 
 /* Result Card */
-.result-card-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(10px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 90;
-  padding: 1rem;
-}
-
 .result-card {
   background: var(--bg-card);
   border: 1px solid var(--border-glass);
-  border-radius: 24px;
-  padding: 2.5rem;
-  max-width: 480px;
+  border-radius: 20px;
+  padding: 1rem 1.25rem;
   width: 100%;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(150px, 0.7fr) minmax(260px, 1.3fr);
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
 @keyframes popIn {
@@ -427,7 +425,12 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
+}
+
+.result-header .result-icon {
+  width: 32px;
+  height: 32px;
 }
 
 .result-icon.win { color: var(--accent-gold); }
@@ -437,13 +440,13 @@ body {
 
 .result-title {
   font-family: var(--font-heading);
-  font-size: 2.2rem;
+  font-size: 1.5rem;
   font-weight: 900;
 }
 
 .result-subtitle {
   color: var(--text-muted);
-  font-size: 1rem;
+  font-size: 0.85rem;
 }
 
 .result-details {
@@ -454,6 +457,12 @@ body {
   background: rgba(255, 255, 255, 0.04);
   padding: 1rem;
   border-radius: 16px;
+}
+
+@media (max-width: 640px) {
+  .result-card {
+    grid-template-columns: 1fr;
+  }
 }
 
 .detail-item {

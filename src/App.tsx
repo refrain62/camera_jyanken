@@ -95,13 +95,23 @@ export const App: React.FC = () => {
       <main className="main-content">
         <div className="game-stage-area">
           <div className="stage-card-wrapper">
-            {/* プレイヤーカメラ映像 & Canvasオーバーレイ */}
-            <WebcamCanvas
-              videoRef={videoRef}
-              isCameraActive={isCameraActive}
-              onHandDetected={handleHandDetected}
-              currentGesture={currentHandGesture}
-            />
+            <div className="player-stage-column">
+              {/* プレイヤーカメラ映像 & Canvasオーバーレイ */}
+              <WebcamCanvas
+                videoRef={videoRef}
+                isCameraActive={isCameraActive}
+                onHandDetected={handleHandDetected}
+                currentGesture={currentHandGesture}
+              />
+
+              {/* 女の子モデルを隠さず、カメラ側の余白へ勝敗を表示 */}
+              <ResultCard
+                result={result}
+                playerHand={playerHand}
+                cpuHand={cpuHand}
+                visible={stage === 'RESULT'}
+              />
+            </div>
 
             {/* AI CPUカード表示 (3D女の子アバター搭載) */}
             <CpuHandDisplay stage={stage} cpuHand={cpuHand} result={result} />
@@ -121,13 +131,6 @@ export const App: React.FC = () => {
         <StatsPanel stats={stats} history={history} />
       </main>
 
-      {/* 勝敗判定ポップオーバー */}
-      <ResultCard
-        result={result}
-        playerHand={playerHand}
-        cpuHand={cpuHand}
-        visible={stage === 'RESULT'}
-      />
     </div>
   );
 };
