@@ -3,7 +3,7 @@
 ## 1. システム全体構成
 
 本システムは、ブラウザ単体で動作するWebカメラリアルタイム解析・対戦型じゃんけんアプリケーションである。
-MediaPipe Tasks Vision (`@mediapipe/tasks-vision`) を使用してWebカメラのフレームデータをグラフィックカード（WebGL / WASM）上で解析し、手の21個の3次元ランドマーク座標を検出する。また Three.js WebGL レンダラーを使用したオリジナルの女の子の3Dアバター (`GirlAvatar3D`) がCPU対戦相手としてインタラクティブにアニメーション動作する。
+MediaPipe Tasks Vision (`@mediapipe/tasks-vision`) を使用してWebカメラのフレームデータをグラフィックカード（WebGL / WASM）上で解析し、手の21個の3次元ランドマーク座標を検出する。また Three.js WebGL レンダラーを使用した女の子の3Dアバター (`GirlAvatar3D`) がCPU対戦相手としてインタラクティブにアニメーション動作する。
 
 ```mermaid
 graph TD
@@ -37,8 +37,8 @@ camera_jyanken/
 │   │   ├── Header.tsx         # タイトル・コントロールバー
 │   │   ├── WebcamCanvas.tsx   # カメラ表示およびCanvasオーバーレイ
 │   │   ├── GameControl.tsx    # じゃんけんスタートボタン・Spaceキーガイド・カウントダウン表示
-│   │   ├── CpuHandDisplay.tsx # CPU側の手表示・3D女の子アバターコンテナ
-│   │   ├── GirlAvatar3D.tsx   # Three.js オリジナルの女の子の3Dアバター WebGL レンダラー
+│   │   ├── CpuHandDisplay.tsx # CPU側の手表示・VRM女の子アバターコンテナ
+│   │   ├── GirlAvatar3D.tsx   # Three.js 女の子の3Dアバター WebGL レンダラー
 │   │   ├── ResultCard.tsx     # 勝敗判定カード・演出
 │   │   └── StatsPanel.tsx     # 勝敗統計・連勝数・履歴
 │   ├── services/              # コア解析・ロジックモジュール
