@@ -33,4 +33,5 @@
 - pnpm test 9件、pnpm build、pnpm lint、git diff --check成功。ブラウザの固定状態確認画面で結果カードと女の子モデルの同時表示を確認。
 - 敵対的レビュー: ゲーム状態・勝敗判定・カメラ処理・認可・個人情報への変更なし。RESULT以外で結果カードを描画しないことを確認。Critical/High指摘なし。
 - 制約: 実カメラによる通し対戦は未実施。既知のJSチャンク500kB超警告あり。
-- 実装PR: https://github.com/refrain62/camera_jyanken/pull/10 （Draft）。
+- 実装PR: https://github.com/refrain62/camera_jyanken/pull/10 （developへマージ済み）。
+- GitHub Pages: 2026-09-09にデプロイ成功。mainのカウントダウン小型化もdevelopへ取り込み済み。
