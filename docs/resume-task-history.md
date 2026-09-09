@@ -24,4 +24,5 @@
 - 実ブラウザで3手・3表情・待機・あいこ時の腕振り・カード幅240/280/400pxを目視確認。モデルファイル欠落時の失敗表示と復元後の再読み込みボタンからの復帰を確認。React StrictMode下で確認。
 - 敵対的レビュー: 任意URL入力なし。同梱モデルのみ使用。アンマウント後のロードと再試行時のGPU資源解放、既存stage/cpuHand/result接続を確認。認可・個人情報・カメラ解析・ゲーム判定は変更なし。Critical/High指摘なし。
 - 制約: VRM約10.3MB。JSチャンク500kB超警告あり。実カメラによる通し対戦は未実施。
-- 実装PR: https://github.com/refrain62/camera_jyanken/pull/7 （Draft）。
+- 実装PR: https://github.com/refrain62/camera_jyanken/pull/7 （developへマージ済み）。
+- GitHub Pages: 2026-09-09にデプロイ成功。実カメラによる通し対戦は未実施だが、固定状態の確認ページで表示と状態遷移を検証済み。
