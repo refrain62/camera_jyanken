@@ -36,7 +36,8 @@ camera_jyanken/
 │   ├── components/            # React UI コンポーネント
 │   │   ├── Header.tsx         # タイトル・コントロールバー
 │   │   ├── WebcamCanvas.tsx   # カメラ表示およびCanvasオーバーレイ
-│   │   ├── GameControl.tsx    # じゃんけんスタートボタン・Spaceキーガイド・カウントダウン表示
+│   │   ├── GameControl.tsx    # じゃんけんスタートボタン・Spaceキーガイド・小型カウントダウン表示
+│   │   ├── ResultCard.tsx     # カメラ側下部へ表示する勝敗結果
 │   │   ├── CpuHandDisplay.tsx # CPU側の手表示・VRM女の子アバターコンテナ
 │   │   ├── GirlAvatar3D.tsx   # Three.js 女の子の3Dアバター WebGL レンダラー
 │   │   ├── ResultCard.tsx     # 勝敗判定カード・演出
