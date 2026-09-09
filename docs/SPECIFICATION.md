@@ -75,7 +75,7 @@ $$R_{\text{thumb}} = \frac{d(T_{\text{thumb}}, M_{\text{pinky}})}{d(M_{\text{ind
 2. **$t = 800\text{ms}$ (`COUNTDOWN_KEN` 遷移)**: 音声「けん」 (587.33Hz Sine Wave)
 3. **$t = 1600\text{ms}$ (`COUNTDOWN_PON` 遷移)**: 音声「ぽん！」 (880Hz Triangle Wave)
 4. **$t = 2200\text{ms}$ (`JUDGEMENT` 判定確定)**: 最新フレームのプレイヤー手取得、CPU手生成、勝敗判定
-5. **$t = 2500\text{ms}$ (`RESULT` 結果表示)**: 結果カード表示、勝敗効果音再生。勝敗決着時は 3000ms 後に `IDLE` へ自動遷移、引き分け時は 1200ms 後に `COUNTDOWN_AIKO` へ自動遷移。
+5. **$t = 2500\text{ms}$ (`RESULT` 結果表示)**: カメラ側の下部へ結果カードを表示し、勝敗効果音を再生する。画面全体を覆わず、CPUアバターと提示した手を表示し続ける。勝敗決着時は 3000ms 後に `IDLE` へ自動遷移、引き分け時は 1200ms 後に `COUNTDOWN_AIKO` へ自動遷移。
 
 ### 4.2 あいこ（引き分け）タイムテーブル
 1. **$t = 0\text{ms}$ (`COUNTDOWN_AIKO` 開始)**: 音声「あいこで」 (523.25Hz Sine Wave)
