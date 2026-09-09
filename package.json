@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@mediapipe/tasks-vision": "^0.10.14",
+    "@pixiv/three-vrm": "^3.5.5",
     "@types/three": "^0.185.4",
     "canvas-confetti": "^1.9.4",
     "lucide-react": "^0.427.0",
