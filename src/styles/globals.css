@@ -177,6 +177,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  position: relative;
 }
 
 .stage-card-wrapper {
@@ -351,24 +352,30 @@ body {
 
 /* Countdown Overlay Animation */
 .countdown-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(9, 13, 22, 0.75);
-  backdrop-filter: blur(8px);
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: min(18rem, calc(100% - 2rem));
+  padding: 0.5rem 1.5rem;
+  background: rgba(9, 13, 22, 0.82);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border-neon);
+  border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: 20;
   pointer-events: none;
+  box-shadow: 0 0 24px rgba(0, 243, 255, 0.2);
 }
 
 .countdown-text {
   font-family: var(--font-heading);
-  font-size: 7rem;
+  font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 900;
+  line-height: 1.1;
+  white-space: nowrap;
   text-transform: uppercase;
   background: linear-gradient(135deg, var(--primary-cyan), var(--primary-magenta));
   -webkit-background-clip: text;

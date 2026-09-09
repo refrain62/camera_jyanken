@@ -49,7 +49,7 @@ export const GameControl: React.FC<GameControlProps> = ({
 
   return (
     <div className="game-control-container">
-      {/* カウントダウン巨大文字オーバーレイ */}
+      {/* アバターを隠さないカウントダウンバッジ */}
       {countdownText && (
         <div className="countdown-overlay">
           <div className={`countdown-text pulse-${stage.toLowerCase()}`}>
