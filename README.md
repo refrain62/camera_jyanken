@@ -1,12 +1,12 @@
 # ✊ AI Real-Time Janken Battle ✌️ 🖐️
 
-Webカメラのリアルタイム映像からAI（MediaPipe HandLandmarker）がプレイヤーの手の形状（21個の3次元骨格座標）を自動認識し、Three.js WebGL による初音ミク風3Dアバター対戦相手、そして「じゃん・けん・ぽん！」「あいこで…しょ！」の掛け声と同期して対戦するWebアプリケーションです。
+Webカメラのリアルタイム映像からAI（MediaPipe HandLandmarker）がプレイヤーの手の形状（21個の3次元骨格座標）を自動認識し、Three.js WebGL によるオリジナルの女の子の3Dアバター対戦相手、そして「じゃん・けん・ぽん！」「あいこで…しょ！」の掛け声と同期して対戦するWebアプリケーションです。
 
 ---
 
 ## 🌟 主な特徴
 
-- 🩵 **Three.js 初音ミク風3Dアバター (Miku AI)**: エメラルドグリーンのツインテールを持つ3Dアバターが対戦相手としてインタラクティブにアニメーション動作。手ポーズ（グー・チョキ・パー）および勝敗に応じた表情（大喜び・悔しいショック・驚き）を表現。
+- 🩵 **Three.js オリジナルの女の子の3Dアバター (Girl AI)**: 茶色のボブヘアを持つ3Dアバターが対戦相手としてインタラクティブにアニメーション動作。手ポーズ（グー・チョキ・パー）および勝敗に応じた表情（大喜び・悔しいショック・驚き）を表現。
 - ⌨️ **スペースキー（`Space`）即時スタート & リトライ**: ボタン操作だけでなく、`Space` キーで即座に勝負を開始・何度でもやり直し可能。
 - 🔄 **「あいこで…しょ！」連続対戦フロー**: 引き分け（あいこ）発生時は 1.2秒後に自動で「あいこで…しょ！」のカウントダウンへ突入し、テンポ良く対戦を継続。
 - 🎥 **Webカメラリアルタイム手認識**: MediaPipe Tasks Vision により、ブラウザ上で遅延なく手の形状（グー・チョキ・パー）を検出。
@@ -20,29 +20,34 @@ Webカメラのリアルタイム映像からAI（MediaPipe HandLandmarker）が
 
 ### 依存パッケージのインストール
 ```bash
-npm install
+pnpm install
 ```
 
 ### 開発サーバーの起動
 ```bash
-npm run dev
+pnpm dev
 ```
 ブラウザで [http://localhost:3000](http://localhost:3000) にアクセスします。
 
 ### 単体テストの実行
 ```bash
-npm run test
+pnpm test
 ```
 
 ### リンター品質検証
 ```bash
-npm run lint
+pnpm lint
 ```
 
 ### プロダクションビルド
 ```bash
-npm run build
+pnpm build
 ```
+
+## GitHub Pages
+
+`develop` ブランチへのpush、またはActions画面からの手動実行でビルドと公開を行います。
+リポジトリの Settings > Pages > Build and deployment > Source は `GitHub Actions` を選択してください。
 
 ---
 
