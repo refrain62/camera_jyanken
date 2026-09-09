@@ -5,7 +5,7 @@
 import React, { useEffect, useState } from 'react';
 import { GameResult, GameStage, HandGesture } from '../types/janken';
 import { Sparkles } from 'lucide-react';
-import { MikuAvatar3D } from './MikuAvatar3D';
+import { GirlAvatar3D } from './GirlAvatar3D';
 
 interface CpuHandDisplayProps {
   stage: GameStage;
@@ -64,11 +64,11 @@ export const CpuHandDisplay: React.FC<CpuHandDisplayProps> = ({ stage, cpuHand, 
     <div className="cpu-hand-card">
       <div className="cpu-header">
         <Sparkles size={22} className="cpu-icon" style={{ color: '#39c5bb' }} />
-        <span className="cpu-title">3D Miku AI (CPU)</span>
+        <span className="cpu-title">女の子 AI (CPU)</span>
       </div>
 
-      {/* 初音ミク風 3D アバター描画領域 */}
-      <MikuAvatar3D stage={stage} cpuHand={cpuHand} result={result} />
+      {/* 女の子の 3D アバター描画領域 */}
+      <GirlAvatar3D stage={stage} cpuHand={cpuHand} result={result} />
 
       {/* 手のバッジ表示 */}
       <div className={`cpu-display-area ${stage === 'RESULT' ? 'revealed' : ''}`}>

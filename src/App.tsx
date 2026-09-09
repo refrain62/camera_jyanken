@@ -103,7 +103,7 @@ export const App: React.FC = () => {
               currentGesture={currentHandGesture}
             />
 
-            {/* AI CPUカード表示 (3Dミクアバター搭載) */}
+            {/* AI CPUカード表示 (3D女の子アバター搭載) */}
             <CpuHandDisplay stage={stage} cpuHand={cpuHand} result={result} />
           </div>
 
